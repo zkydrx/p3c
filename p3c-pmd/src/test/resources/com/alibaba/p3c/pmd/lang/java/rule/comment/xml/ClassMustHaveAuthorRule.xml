@@ -62,8 +62,8 @@ public class ClassMustHaveAuthorRule {}
  * @date 2016/12/14
  */
 public class Outer_Demo {
-   public class Inner_Demo {
-   }
+    public class Inner_Demo {
+    }
 }
     ]]>
 	</code-fragment>
@@ -142,6 +142,26 @@ public interface Vehicle {
 		<description>Enum in interface</description>
 		<expected-problems>0</expected-problems>
 		<code-ref id="enum-in-interface" />
+	</test-code>
+
+	<code-fragment id="upper-case-author-annotation"><![CDATA[
+/**
+ * @Author keriezhang
+ * @date 2016/12/14
+ */
+public interface Vehicle {
+    public Number getNumber();
+    public void method2();
+    public enum color {
+        RED, GREEN, ANY;
+    }
+}
+    ]]>
+	</code-fragment>
+	<test-code>
+		<description>Uppercase author annotation</description>
+		<expected-problems>0</expected-problems>
+		<code-ref id="upper-case-author-annotation" />
 	</test-code>
 
 </test-data>

@@ -21,7 +21,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.alibaba.p3c.pmd.I18nResources;
-import com.alibaba.p3c.pmd.lang.java.rule.util.CommentUtils;
+import com.alibaba.p3c.pmd.lang.java.rule.util.NodeSortUtils;
 
 import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit;
@@ -49,9 +49,11 @@ public class EnumConstantsMustHaveCommentRule extends AbstractAliCommentRule {
             if (value instanceof ASTEnumDeclaration) {
                 isPreviousEnumDecl = true;
             } else if (value instanceof ASTEnumConstant && isPreviousEnumDecl) {
-                addViolationWithMessage(data, value,
+                Node enumBody = value.jjtGetParent();
+                Node enumDeclaration = enumBody.jjtGetParent();
+                addViolationWithMessage(data, enumBody,
                     I18nResources.getMessage("java.comment.EnumConstantsMustHaveCommentRule.violation.msg",
-                        value.getImage()));
+                        enumDeclaration.getImage()));
                 isPreviousEnumDecl = false;
             } else {
                 isPreviousEnumDecl = false;
@@ -65,12 +67,12 @@ public class EnumConstantsMustHaveCommentRule extends AbstractAliCommentRule {
         SortedMap<Integer, Node> itemsByLineNumber = new TreeMap<>();
 
         List<ASTEnumDeclaration> enumDecl = cUnit.findDescendantsOfType(ASTEnumDeclaration.class);
-        CommentUtils.addNodesToSortedMap(itemsByLineNumber, enumDecl);
+        NodeSortUtils.addNodesToSortedMap(itemsByLineNumber, enumDecl);
 
         List<ASTEnumConstant> contantDecl = cUnit.findDescendantsOfType(ASTEnumConstant.class);
-        CommentUtils.addNodesToSortedMap(itemsByLineNumber, contantDecl);
+        NodeSortUtils.addNodesToSortedMap(itemsByLineNumber, contantDecl);
 
-        CommentUtils.addNodesToSortedMap(itemsByLineNumber, cUnit.getComments());
+        NodeSortUtils.addNodesToSortedMap(itemsByLineNumber, cUnit.getComments());
 
         return itemsByLineNumber;
     }

@@ -27,22 +27,23 @@ import org.eclipse.core.resources.IMarker
  * @date 2017/06/13
  */
 object InspectionResults {
-    val fileViolations = linkedMapOf<IFile, List<MarkerViolation>>()
+    private val fileViolations = linkedMapOf<IFile, List<MarkerViolation>>()
 
     var contentDescription = ""
 
-    val errors: List<LevelViolations> get() = run {
-        val result = toLevelViolationList(fileViolations.values.flatten())
-        contentDescription = getContentDescription(result)
-        result
-    }
+    val errors: List<LevelViolations>
+        get() {
+            val result = toLevelViolationList(fileViolations.values.flatten())
+            contentDescription = getContentDescription(result)
+            return result
+        }
 
     lateinit var view: InspectionResultView
 
 
     fun clear() {
-        fileViolations.forEach { t, u ->
-            MarkerUtil.removeAllMarkers(t)
+        fileViolations.forEach {
+            MarkerUtil.removeAllMarkers(it.key)
         }
         fileViolations.clear()
         // update contentDescription
